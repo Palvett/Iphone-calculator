@@ -39,7 +39,7 @@ body {
 
 .display {
   background: transparent;
-  color: #ffffff;
+  color: #fff;
   font-size: 130px;
   font-weight: 300;
   height: 158px;
@@ -93,3 +93,4 @@ body {
   left: 50%;
   transform: translateX(-50%);
 }
+
