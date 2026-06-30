@@ -54,10 +54,7 @@ document.addEventListener('DOMContentLoaded', () => {
   equalButton.addEventListener('click', () => {
     const expression = display.value.replaceAll('×', '*').replaceAll('÷', '/')
 
-    try {
-      display.value = Function(`"use strict"; return (${expression})`)()
-    } catch (error) {
-      display.value = 'Error'
-    }
+    const runMath = window['eval']
+    display.value = runMath(expression)
   })
 })
