@@ -42,7 +42,7 @@ jobs:
       # Checkout the code base #
       ##########################
       - name: Checkout Code
-        uses: actions/checkout@v4
+        uses: actions/checkout@eef6142db4c56b24dcc28e10323a10e183226f5d # x-release-please-version
         with:
           # Full git history is needed to get a proper
           # list of changed files within `super-linter`
@@ -52,7 +52,7 @@ jobs:
       # Run Linter against code base #
       ################################
       - name: Lint Code Base
-        uses: super-linter/super-linter@v6
+        uses: super-linter/super-linter@85cd204d60e7f7b3df6cf9d691eb21cc540498bf # x-release-please-version
         env:
           VALIDATE_ALL_CODEBASE: false
           # Change to 'master' if your main branch differs
