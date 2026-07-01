@@ -1,111 +1,111 @@
 // functionality
 
-document.addEventListener("DOMContentLoaded", () => {
-  const display = document.querySelector(".display");
-  const functionButtons = document.querySelectorAll(".function");
-  const operatorButtons = document.querySelectorAll(".operator");
-  const numberButtons = document.querySelectorAll(".number");
-  const decimalButton = document.querySelector(".decimal");
-  const equalButton = document.querySelector(".equal");
+document.addEventListener('DOMContentLoaded', () => {
+  const display = document.querySelector('.display')
+  const functionButtons = document.querySelectorAll('.function')
+  const operatorButtons = document.querySelectorAll('.operator')
+  const numberButtons = document.querySelectorAll('.number')
+  const decimalButton = document.querySelector('.decimal')
+  const equalButton = document.querySelector('.equal')
 
   function adjustFontSize() {
-    const length = display.value.length;
+    const length = display.value.length
 
     if (length <= 6) {
-      display.style.fontSize = "130px";
+      display.style.fontSize = '130px';
     } else if (length <= 9) {
-      display.style.fontSize = "100px";
+      display.style.fontSize = '100px';
     } else if (length <= 12) {
-      display.style.fontSize = "80px";
+      display.style.fontSize = '80px';
     } else {
-      display.style.fontSize = "60px";
+      display.style.fontSize = '60px';
     }
   }
 
   numberButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const value = button.textContent.trim();
+    button.addEventListener('click', () => {
+      const value = button.textContent.trim()
 
-      if (display.value === "" || display.value === "0") {
-        display.value = value;
+      if (display.value === '' || display.value === '0') {
+        display.value = value
       } else {
-        display.value += value;
+        display.value += value
       }
-      adjustFontSize();
-    });
-  });
+      adjustFontSize()
+    })
+  })
 
   operatorButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const value = button.textContent.trim();
+    button.addEventListener('click', () => {
+      const value = button.textContent.trim()
 
-      if (display.value === "") {
-        return;
+      if (display.value === '') {
+        return
       }
 
-      const lastChar = display.value.slice(-1);
+      const lastChar = display.value.slice(-1)
 
-      if (["+", "-", "×", "÷"].includes(lastChar)) {
-        return;
+      if (['+', '-', '×', '÷'].includes(lastChar)) {
+        return
       }
 
-      display.value += value;
-    });
-  });
+      display.value += value
+    })
+  })
 
   functionButtons.forEach((button) => {
-    button.addEventListener("click", () => {
-      if (button.classList.contains("clear")) {
-        display.value = "";
+    button.addEventListener('click', () => {
+      if (button.classList.contains('clear')) {
+        display.value = ''
       }
 
       if (button.classList.contains("back")) {
-        display.value = display.value.slice(0, -1) || "";
+        display.value = display.value.slice(0, -1) || ''
       }
 
-      if (button.classList.contains("percentage")) {
-        let value = parseFloat(display.value);
+      if (button.classList.contains('percentage')) {
+        let value = parseFloat(display.value)
 
         if (isNaN(value)) {
-          display.value = "";
+          display.value = ''
           return;
         }
 
-        display.value = (value / 100).toString();
+        display.value = (value / 100).toString()
       }
 
       if (button.classList.contains("toggle")) {
-        display.value = String(-parseFloat(display.value));
+        display.value = String(-parseFloat(display.value))
       }
-    });
-  });
+    })
+  })
 
-  decimalButton.addEventListener("click", () => {
-    if (!display.value.includes(".")) {
-      display.value += ".";
+  decimalButton.addEventListener('click', () => {
+    if (!display.value.includes('.')) {
+      display.value += '.'
     }
-  });
+  })
 
-  equalButton.addEventListener("click", () => {
-    if (display.value === "") return;
+  equalButton.addEventListener('click', () => {
+    if (display.value === '') return
 
-    const expression = display.value.replaceAll("×", "*").replaceAll("÷", "/");
-    const tokens = expression.match(/(\d+\.?\d*)|([+\-*/])/g);
+    const expression = display.value.replaceAll('×', '*').replaceAll('÷', '/')
+    const tokens = expression.match(/(\d+\.?\d*)|([+\-*/])/g)
 
-    if (!tokens) return;
+    if (!tokens) return
 
-    let result = parseFloat(tokens[0]);
+    let result = parseFloat(tokens[0])
 
     for (let i = 1; i < tokens.length; i += 2) {
-      const operator = tokens[i];
-      const number = parseFloat(tokens[i + 1]);
+      const operator = tokens[i]
+      const number = parseFloat(tokens[i + 1])
 
-      if (operator === "+") result += number;
-      if (operator === "-") result -= number;
-      if (operator === "*") result *= number;
-      if (operator === "/") result /= number;
+      if (operator === "+") result += number
+      if (operator === "-") result -= number
+      if (operator === "*") result *= number
+      if (operator === "/") result /= number
     }
 
-    display.value = result;
-  });
-});
+    display.value = result
+  })
+})
