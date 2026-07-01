@@ -33,6 +33,23 @@ body {
   border: 2px solid white;
 }
 
+.history-list {
+  list-style: none;
+  color: white;
+  font-size: 30px;
+  text-align: right;
+  overflow-y: auto;
+  max-height: 220px;
+  width: 100%;
+  padding: 20px;
+  align-self: flex-end;
+}
+
+.history-list li {
+  margin-bottom: 8px;
+  color: #a5a5a5a5;
+}
+
 .status img {
   width: 100px;
 }

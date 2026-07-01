@@ -7,6 +7,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const numberButtons = document.querySelectorAll('.number')
   const decimalButton = document.querySelector('.decimal')
   const equalButton = document.querySelector('.equal')
+  const historyList = document.querySelector('.history-list')
 
   function adjustFontSize () {
     const length = display.value.length
@@ -56,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   functionButtons.forEach((button) => {
     button.addEventListener('click', () => {
       if (button.classList.contains('clear')) {
-        display.value = ''
+        display.value = '0'
       }
 
       if (button.classList.contains('back')) {
@@ -67,7 +68,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const value = parseFloat(display.value)
 
         if (isNaN(value)) {
-          display.value = ''
+          display.value = '0'
           return
         }
 
@@ -87,8 +88,9 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   equalButton.addEventListener('click', () => {
-    if (display.value === '') return
+    if (display.value === '0') return
 
+    const expressionRaw = display.value
     const expression = display.value.replaceAll('×', '*').replaceAll('÷', '/')
     const tokens = expression.match(/(\d+\.?\d*)|([+\-*/])/g)
 
@@ -107,5 +109,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     display.value = result
+    adjustFontSize()
+
+    const item =document.createElement('li')
+    item.textContent = `${expressionRaw} = ${result}`
+    historyList.prepend(item)
   })
 })
