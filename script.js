@@ -8,13 +8,30 @@ document.addEventListener("DOMContentLoaded", () => {
   const decimalButton = document.querySelector(".decimal");
   const equalButton = document.querySelector(".equal");
 
+  function adjustFontSize() {
+    const length = display.value.length;
+
+    if (length <= 6) {
+      display.style.fontSize = "130px";
+    } else if (length <= 9) {
+      display.style.fontSize = "100px";
+    } else if (length <= 12) {
+      display.style.fontSize = "80px";
+    } else {
+      display.style.fontSize = "60px";
+    }
+  }
+
   numberButtons.forEach((button) => {
     button.addEventListener("click", () => {
-      if (display.value === "0") {
-        display.value = button.textContent.trim();
+      const value = button.textContent.trim();
+
+      if (display.value === "" || display.value === "0") {
+        display.value = value;
       } else {
-        display.value += button.textContent.trim();
+        display.value += value;
       }
+      adjustFontSize();
     });
   });
 
@@ -22,14 +39,16 @@ document.addEventListener("DOMContentLoaded", () => {
     button.addEventListener("click", () => {
       const value = button.textContent.trim();
 
-      if (display.value === "0") {
+      if (display.value === "") {
         return;
-        const lastChar = display.value.slice(-1);
-
-        if (["+", "-", "", ""].includes(lastChar)) {
-          return;
-        }
       }
+
+      const lastChar = display.value.slice(-1);
+
+      if (["+", "-", "×", "÷"].includes(lastChar)) {
+        return;
+      }
+
       display.value += value;
     });
   });
@@ -37,15 +56,22 @@ document.addEventListener("DOMContentLoaded", () => {
   functionButtons.forEach((button) => {
     button.addEventListener("click", () => {
       if (button.classList.contains("clear")) {
-        display.value = "0";
+        display.value = "";
       }
 
       if (button.classList.contains("back")) {
-        display.value = display.value.slice(0, -1) || "0";
+        display.value = display.value.slice(0, -1) || "";
       }
 
       if (button.classList.contains("percentage")) {
-        display.value = (parseFloat(display.value) / 100).toString();
+        let value = parseFloat(display.value);
+
+        if (isNaN(value)) {
+          display.value = "";
+          return;
+        }
+
+        display.value = (value / 100).toString();
       }
 
       if (button.classList.contains("toggle")) {
@@ -61,9 +87,25 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   equalButton.addEventListener("click", () => {
-    const expression = display.value.replaceAll("×", "*").replaceAll("÷", "/");
+    if (display.value === "") return;
 
-    const runMath = window["eval"];
-    display.value = runMath(expression);
+    const expression = display.value.replaceAll("×", "*").replaceAll("÷", "/");
+    const tokens = expression.match(/(\d+\.?\d*)|([+\-*/])/g);
+
+    if (!tokens) return;
+
+    let result = parseFloat(tokens[0]);
+
+    for (let i = 1; i < tokens.length; i += 2) {
+      const operator = tokens[i];
+      const number = parseFloat(tokens[i + 1]);
+
+      if (operator === "+") result += number;
+      if (operator === "-") result -= number;
+      if (operator === "*") result *= number;
+      if (operator === "/") result /= number;
+    }
+
+    display.value = result;
   });
 });
