@@ -8,17 +8,17 @@ document.addEventListener('DOMContentLoaded', () => {
   const decimalButton = document.querySelector('.decimal')
   const equalButton = document.querySelector('.equal')
 
-  function adjustFontSize() {
+  function adjustFontSize () {
     const length = display.value.length
 
     if (length <= 6) {
-      display.style.fontSize = '130px';
+      display.style.fontSize = '130px'
     } else if (length <= 9) {
-      display.style.fontSize = '100px';
+      display.style.fontSize = '100px'
     } else if (length <= 12) {
-      display.style.fontSize = '80px';
+      display.style.fontSize = '80px'
     } else {
-      display.style.fontSize = '60px';
+      display.style.fontSize = '60px'
     }
   }
 
@@ -59,16 +59,16 @@ document.addEventListener('DOMContentLoaded', () => {
         display.value = ''
       }
 
-      if (button.classList.contains("back")) {
+      if (button.classList.contains('back')) {
         display.value = display.value.slice(0, -1) || ''
       }
 
       if (button.classList.contains('percentage')) {
-        let value = parseFloat(display.value)
+        const value = parseFloat(display.value)
 
         if (isNaN(value)) {
           display.value = ''
-          return;
+          return
         }
 
         display.value = (value / 100).toString()
@@ -100,10 +100,10 @@ document.addEventListener('DOMContentLoaded', () => {
       const operator = tokens[i]
       const number = parseFloat(tokens[i + 1])
 
-      if (operator === "+") result += number
-      if (operator === "-") result -= number
-      if (operator === "*") result *= number
-      if (operator === "/") result /= number
+      if (operator === '+') result += number
+      if (operator === '-') result -= number
+      if (operator === '*') result *= number
+      if (operator === '/') result /= number
     }
 
     display.value = result
