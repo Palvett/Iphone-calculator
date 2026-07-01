@@ -129,7 +129,6 @@ document.addEventListener('DOMContentLoaded', () => {
     display.value = result
     adjustFontSize()
 
-
     const item = document.createElement('li')
     item.textContent = `${expressionRaw} = ${result}`
     historyList.prepend(item)
