@@ -57,7 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   functionButtons.forEach((button) => {
     button.addEventListener('click', () => {
       if (button.classList.contains('clear')) {
-        display.value = '0'
+        display.value = ''
       }
 
       if (button.classList.contains('back')) {
