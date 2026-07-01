@@ -74,7 +74,7 @@ document.addEventListener('DOMContentLoaded', () => {
         display.value = (value / 100).toString()
       }
 
-      if (button.classList.contains("toggle")) {
+      if (button.classList.contains('toggle')) {
         display.value = String(-parseFloat(display.value))
       }
     })
