@@ -94,11 +94,17 @@ document.addEventListener('DOMContentLoaded', () => {
     const expression = display.value.replaceAll('×', '*').replaceAll('÷', '/')
     const tokens = expression.match(/(\d+\.?\d*)|([+\-*/])/g)
 
-    if (!tokens) return
+    let result
+    let i
+    if (tokens[0] === '-') {
+      result = -parseFloat(tokens[1])
+      i = 2
+    } else {
+      result = parseFloat(tokens[0])
+      i = 1
+    }
 
-    let result = parseFloat(tokens[0])
-
-    for (let i = 1; i < tokens.length; i += 2) {
+    for (; i < tokens.length; i += 2) {
       const operator = tokens[i]
       const number = parseFloat(tokens[i + 1])
 
