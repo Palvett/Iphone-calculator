@@ -18,8 +18,12 @@ document.addEventListener('DOMContentLoaded', () => {
       display.style.fontSize = '100px'
     } else if (length <= 12) {
       display.style.fontSize = '80px'
-    } else {
+    } else if (length <= 15) {
       display.style.fontSize = '60px'
+    } else if (length <= 18) {
+      display.style.fontSize = '40px'
+    } else {
+      display.style.fontSize = '25px'
     }
   }
 
@@ -51,6 +55,7 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       display.value += value
+      adjustFontSize()
     })
   })
 
@@ -85,6 +90,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (!display.value.includes('.')) {
       display.value += '.'
     }
+    adjustFontSize()
   })
 
   equalButton.addEventListener('click', () => {
@@ -111,11 +117,18 @@ document.addEventListener('DOMContentLoaded', () => {
       if (operator === '+') result += number
       if (operator === '-') result -= number
       if (operator === '*') result *= number
-      if (operator === '/') result /= number
+      if (operator === '/') {
+        if (number === 0) {
+          display.value = 'Error'
+          return
+        }
+        result /= number
+      }
     }
 
     display.value = result
     adjustFontSize()
+
 
     const item = document.createElement('li')
     item.textContent = `${expressionRaw} = ${result}`
