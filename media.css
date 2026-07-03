@@ -4,6 +4,10 @@
     padding: 0;
   }
 
+  .nav-header {
+    display: none;
+  }
+
   .calculator {
     width: 100vw;
     height: 100dvh;
@@ -34,17 +38,41 @@
 }
 
 @media (max-width: 375px) {
-  .button {
-    width: 70px;
-    height: 70px;
-    font-size: 26px;
+  body {
+    margin: 0;
+    padding: 0;
+  }
+
+  .nav-header {
+    display: none;
+  }
+
+  .calculator {
+    width: 100vw;
+    height: 100dvh;
+    border-radius: 0;
+    padding: 10px;
+  }
+
+  .top-container {
+    height: 130px;
   }
 
   .display {
     font-size: 60px;
+    min-height: 90px;
+    margin-bottom: 10px;
+    padding: 0 10px;
   }
 
   .buttons-container {
     gap: 8px;
+  }
+
+  .button {
+    width: 70px;
+    height: 70px;
+    font-size: 26px;
+    border-radius: 35px;
   }
 }
