@@ -8,6 +8,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const decimalButton = document.querySelector('.decimal')
   const equalButton = document.querySelector('.equal')
   const historyList = document.querySelector('.history-list')
+  let justCalculated = false
 
   function isError () {
     return display.value === 'Error'
@@ -38,6 +39,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (display.value === '' || display.value === '0') {
         display.value = value
+        justCalculated = false
       } else {
         display.value += value
       }
@@ -150,6 +152,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const rounded = parseFloat(result.toFixed(10))
     display.value = rounded
     adjustFontSize()
+    justCalculated = true
 
     const item = document.createElement('li')
     item.textContent = `${expressionRaw} = ${result}`
