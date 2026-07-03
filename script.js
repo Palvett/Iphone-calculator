@@ -9,7 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   const equalButton = document.querySelector('.equal')
   const historyList = document.querySelector('.history-list')
 
-  function isError() {
+  function isError () {
     return display.value === 'Error'
   }
 
@@ -136,7 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
         result /= number
       }
     }
-    if(isNaN(result)) {
+
+    if (isNaN(result)) {
       display.value = 'Error'
       return
     }
@@ -146,7 +147,7 @@ document.addEventListener('DOMContentLoaded', () => {
       return
     }
 
-    display.value = parseFloat(result.toFixed(10))
+    const rounded = parseFloat(result.toFixed(10))
     display.value = rounded
     adjustFontSize()
 
