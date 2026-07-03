@@ -11,7 +11,7 @@ This calculator makes everyday calculations fast and easy. I supports basic arit
 Create a clean responsive interface inspired by an iphone calculator.
 Perform basic arithmetic and percentage calculations accurately.
 Learn how to implement DOM manipulation and event handling in JavaScript.
-Develop logical problem solving skills by using Javascript functions and conditional statements.
+Develop logical problem solving skills by using JavaScript functions and conditional statements.
 Store and display calculation history for easy reference.
 In simple terms, create a beautiful responsive user interface.
 
@@ -48,7 +48,7 @@ cd Iphone-calculator
 Understanding the DOM, that is Learning what the Document Object Model is and how JavaScript interacts with HTML elements.
 Adding event listener which listens for click events on buttons and trigger the right function.
 Preventing double operators from being typed and storing the operator for calculation.
-The natural solution was to use eval() to calculate the expression, but GitHub flagged it as a security risk. This led to building a custom regex tokenizer using expression.match(/(\d+\.?\d*)|([+\-*/])/g) to manually parse and calculate numbers and operators.
+The natural claculation solution was to use `eval()` to calculate the expression, but GitHub flags `eval()` as a severe code injection security risk. To resolve this, I securely replaced it by building a custom regular expression tokenizer using `expression.match(/(\d+\.?\d*)|([+\-*/])/g)` to safely parse and manually calculate numbers and operators.
 When Error was displayed, all buttons needed to be blocked except AC to reset the calculator which was a big challenge.
 Learning how to dynamically create list items with createElement and add them to the DOM using prepend.
 After pressing =, typing a new number was appending to the result. Fixed using a justCalculated flag.
