@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isError()) return
       const value = button.textContent.trim()
 
-      if (display.value === '' || display.value === '0') {
+      if (display.value === '' || display.value === '0' || justCalculated) {
         display.value = value
         justCalculated = false
       } else {
