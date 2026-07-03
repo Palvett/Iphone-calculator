@@ -9,6 +9,10 @@ document.addEventListener('DOMContentLoaded', () => {
   const equalButton = document.querySelector('.equal')
   const historyList = document.querySelector('.history-list')
 
+  function isError() {
+    return display.value === 'Error'
+  }
+
   function adjustFontSize () {
     const length = display.value.length
 
@@ -29,6 +33,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      if (isError()) return
       const value = button.textContent.trim()
 
       if (display.value === '' || display.value === '0') {
@@ -42,6 +47,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   operatorButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      if (isError()) return
       const value = button.textContent.trim()
 
       if (display.value === '') {
@@ -61,6 +67,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   functionButtons.forEach((button) => {
     button.addEventListener('click', () => {
+      if (isError() && !button.classList.contains('clear')) return
       if (button.classList.contains('clear')) {
         display.value = ''
       }
@@ -70,8 +77,8 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (button.classList.contains('percentage')) {
+        if (display.value === '') return
         const value = parseFloat(display.value)
-
         if (isNaN(value)) {
           display.value = '0'
           return
@@ -81,19 +88,23 @@ document.addEventListener('DOMContentLoaded', () => {
       }
 
       if (button.classList.contains('toggle')) {
+        if (display.value === '') return
         display.value = String(-parseFloat(display.value))
       }
     })
   })
 
   decimalButton.addEventListener('click', () => {
-    if (!display.value.includes('.')) {
+    if (isError()) return
+    const lastNumber = display.value.split(/[+\-×÷]/).pop()
+    if (!lastNumber.includes('.')) {
       display.value += '.'
     }
     adjustFontSize()
   })
 
   equalButton.addEventListener('click', () => {
+    if (isError()) return
     if (display.value === '0') return
 
     const expressionRaw = display.value
@@ -125,8 +136,18 @@ document.addEventListener('DOMContentLoaded', () => {
         result /= number
       }
     }
+    if(isNaN(result)) {
+      display.value = 'Error'
+      return
+    }
 
-    display.value = result
+    if (result === Infinity || result === -Infinity) {
+      display.value = 'Error'
+      return
+    }
+
+    display.value = parseFloat(result.toFixed(10))
+    display.value = rounded
     adjustFontSize()
 
     const item = document.createElement('li')
