@@ -49,20 +49,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
   operatorButtons.forEach((button) => {
     button.addEventListener('click', () => {
-      if (isError()) return
+      if (isError() || display.value === '') return
       const value = button.textContent.trim()
-
-      if (display.value === '') {
-        return
-      }
-
       const lastChar = display.value.slice(-1)
 
       if (['+', '-', '×', '÷'].includes(lastChar)) {
-        return
+        display.value = display.value.slice(0, -1) + value
+        return;
       }
 
       display.value += value
+      justCalculated = false
       adjustFontSize()
     })
   })
@@ -80,19 +77,29 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (button.classList.contains('percentage')) {
         if (display.value === '') return
-        const value = parseFloat(display.value)
-        if (isNaN(value)) {
-          display.value = '0'
-          return
-        }
-
-        display.value = (value / 100).toString()
+        const tokens = display.value.split(/([+\-×÷])/)
+        const lastNumStr = tokens[tokens.length - 1]
+        if (lastNumStr === '' || isNaN(lastNumStr)) return
+        
+        tokens[tokens.length - 1] = (parseFloat(lastNumStr) / 100).toString()
+        display.value = tokens.join('')
       }
 
       if (button.classList.contains('toggle')) {
         if (display.value === '') return
-        display.value = String(-parseFloat(display.value))
+        const tokens = display.value.split(/([+\-×÷])/)
+        const lastNumStr = tokens[tokens.length - 1]
+        if (lastNumStr === '' || isNaN(lastNumStr)) return
+
+        if (lastNumStr.startsWith('(-') && lastNumStr.endsWith(')')) {
+          tokens[tokens.length - 1] = lastNumStr.slice(2, -1)
+        } else {
+          tokens[tokens.length - 1] = `(-${lastNumStr})`
+        }
+        display.value = tokens.join('')
       }
+      
+      adjustFontSize()
     })
   })
 
@@ -106,56 +113,38 @@ document.addEventListener('DOMContentLoaded', () => {
   })
 
   equalButton.addEventListener('click', () => {
-    if (isError()) return
-    if (display.value === '0') return
+    if (isError() || display.value === '') return
 
-    const expressionRaw = display.value
-    const expression = display.value.replaceAll('×', '*').replaceAll('÷', '/')
-    const tokens = expression.match(/(\d+\.?\d*)|([+\-*/])/g)
+    let expressionRaw = display.value
+    let lastChar = expressionRaw.slice(-1)
+    
+    // Drop trailing operators to prevent runtime execution evaluation errors
+    if (['+', '-', '×', '÷'].includes(lastChar)) {
+      expressionRaw = expressionRaw.slice(0, -1)
+    }
+
+    const expression = expressionRaw.replaceAll('×', '*').replaceAll('÷', '/')
 
     let result
-    let i
-    if (tokens[0] === '-') {
-      result = -parseFloat(tokens[1])
-      i = 2
-    } else {
-      result = parseFloat(tokens[0])
-      i = 1
-    }
-
-    for (; i < tokens.length; i += 2) {
-      const operator = tokens[i]
-      const number = parseFloat(tokens[i + 1])
-
-      if (operator === '+') result += number
-      if (operator === '-') result -= number
-      if (operator === '*') result *= number
-      if (operator === '/') {
-        if (number === 0) {
-          display.value = 'Error'
-          return
-        }
-        result /= number
-      }
-    }
-
-    if (isNaN(result)) {
+    try {
+      result = new Function('return ' + expression)()
+    } catch {
       display.value = 'Error'
       return
     }
 
-    if (result === Infinity || result === -Infinity) {
+    if (result === undefined || isNaN(result) || !isFinite(result)) {
       display.value = 'Error'
       return
     }
 
     const rounded = parseFloat(result.toFixed(10))
-    display.value = rounded
+    display.value = rounded.toString()
     adjustFontSize()
     justCalculated = true
 
     const item = document.createElement('li')
-    item.textContent = `${expressionRaw} = ${result}`
+    item.textContent = `${expressionRaw} = ${rounded}`
     historyList.prepend(item)
   })
 })
