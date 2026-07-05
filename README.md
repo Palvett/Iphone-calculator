@@ -38,7 +38,7 @@ Optimized with CSS3 to fit perfectly in all iphone sizes.
 ## ⚙ Installation & Setup
 
 ```text
-git clone https://github.com/Palvett/Iphone_calculator.git
+git clone https://github.com/Palvett/Iphone-calculator.git
 ```
 
 cd Iphone-calculator
