@@ -104,6 +104,10 @@ body {
   background: #a5a5a5;
 }
 
+.button.toggle {
+  background: #333;
+}
+
 .button.operator {
   background: #f1a33c;
 }
