@@ -97,6 +97,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (isError() && !button.classList.contains('clear')) return
       if (button.classList.contains('clear')) {
         display.value = ''
+        justCalculated = false
       }
 
       if (button.classList.contains('back')) {
