@@ -111,11 +111,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (lastNumberInput === '' || isNaN(lastNumberInput)) return
 
         if (button.classList.contains('percentage')) {
-          equationPieces[equationPieces.length - 1] = (parseFloat(lastNumberInput) / 100).toString()
+          equationPieces[equationPieces.length - 1] =
+          (parseFloat(lastNumberInput) / 100).toString()
+          display.value = equationPieces.join('')
         } else {
-          equationPieces[equationPieces.length - 1] = (parseFloat(lastNumberInput) * -1).toString()
+          display.value = display.value.startsWith('-')
+            ? lastNumberInput.slice(1)
+            :'-' + display.value
         }
-        display.value = equationPieces.join('')
       }
       adjustFontSize()
     })
@@ -132,6 +135,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
   equalButton.addEventListener('click', () => {
     if (isError() || display.value === '') return
+
+    const expressionRaw = display.value
 
     let finalEquation = display.value
     if (['+', '-', '×', '÷'].includes(finalEquation.slice(-1))) {
@@ -150,7 +155,7 @@ document.addEventListener('DOMContentLoaded', () => {
     justCalculated = true
 
     const item = document.createElement('li')
-    item.textContent = `${finalEquation} = ${fixedPrecisionNumber}`
+    item.textContent = `${expressionRaw} = ${fixedPrecisionNumber}`
     historyList.prepend(item)
   })
 })
