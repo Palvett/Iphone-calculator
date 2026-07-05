@@ -10,11 +10,11 @@ document.addEventListener('DOMContentLoaded', () => {
   const historyList = document.querySelector('.history-list')
   let justCalculated = false
 
-  function isError() {
+  function isError () {
     return display.value === 'Error'
   }
 
-  function adjustFontSize() {
+  function adjustFontSize () {
     const length = display.value.length
     if (length <= 6) display.style.fontSize = '130px'
     else if (length <= 9) display.style.fontSize = '100px'
@@ -24,7 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     else display.style.fontSize = '25px'
   }
 
-  function safeEvaluate(equationString) {
+  function safeEvaluate (equationString) {
     const cleanEquation = equationString.replaceAll('×', '*').replaceAll('÷', '/')
     const mathSymbolsList = cleanEquation.match(/(-?\d+\.?\d*)|([+\-*/])/g)
     if (!mathSymbolsList) return 'Error'
@@ -32,13 +32,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const additionSubtractionQueue = []
     for (let i = 0; i < mathSymbolsList.length; i++) {
       const currentItem = mathSymbolsList[i]
-      
       if (currentItem === '*' || currentItem === '/') {
         const previousNumber = parseFloat(additionSubtractionQueue.pop())
         const nextNumber = parseFloat(mathSymbolsList[++i])
-        
         if (currentItem === '/' && nextNumber === 0) return 'Error'
-        
         if (currentItem === '*') {
           additionSubtractionQueue.push(previousNumber * nextNumber)
         } else {
@@ -53,7 +50,6 @@ document.addEventListener('DOMContentLoaded', () => {
     for (let i = 1; i < additionSubtractionQueue.length; i += 2) {
       const operatorSign = additionSubtractionQueue[i]
       const trailingNumber = parseFloat(additionSubtractionQueue[i + 1])
-      
       if (operatorSign === '+') {
         runningTotal += trailingNumber
       }
@@ -68,7 +64,6 @@ document.addEventListener('DOMContentLoaded', () => {
     button.addEventListener('click', () => {
       if (isError()) return
       const value = button.textContent.trim()
-      
       if (display.value === '' || display.value === '0' || justCalculated) {
         display.value = value
         justCalculated = false
@@ -100,7 +95,6 @@ document.addEventListener('DOMContentLoaded', () => {
   functionButtons.forEach((button) => {
     button.addEventListener('click', () => {
       if (isError() && !button.classList.contains('clear')) return
-      
       if (button.classList.contains('clear')) {
         display.value = ''
       }
