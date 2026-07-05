@@ -117,7 +117,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } else {
           display.value = display.value.startsWith('-')
             ? lastNumberInput.slice(1)
-            :'-' + display.value
+            : '-' + display.value
         }
       }
       adjustFontSize()
