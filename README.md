@@ -48,10 +48,11 @@ cd Iphone-calculator
 Understanding the DOM, that is Learning what the Document Object Model is and how JavaScript interacts with HTML elements.
 Adding event listener which listens for click events on buttons and trigger the right function.
 Preventing double operators from being typed and storing the operator for calculation.
-The natural claculation solution was to use `eval()` to calculate the expression, but GitHub flags `eval()` as a severe code injection security risk. To resolve this, I securely replaced it by building a custom regular expression tokenizer using `expression.match(/(\d+\.?\d*)|([+\-*/])/g)` to safely parse and manually calculate numbers and operators.
+The natural claculation solution was to use `eval()` to calculate the expression to me, but GitHub flags `eval()` as a severe code injection security risk. To resolve this, I securely replaced it by building a custom regular expression tokenizer using safeEvaluate function and `expression.match(/(\d+\.?\d*)|([+\-*/])/g)` to safely parse and manually calculate numbers and operators.
 When Error was displayed, all buttons needed to be blocked except AC to reset the calculator which was a big challenge.
 Learning how to dynamically create list items with createElement and add them to the DOM using prepend.
 After pressing =, typing a new number was appending to the result. Fixed using a justCalculated flag.
+After I finished everything and was left with obtaining my deployment link, I realised that my calculator was not following the rules of BODMAS.
 
 ## 📚 What I Learned
 

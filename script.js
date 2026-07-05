@@ -10,33 +10,65 @@ document.addEventListener('DOMContentLoaded', () => {
   const historyList = document.querySelector('.history-list')
   let justCalculated = false
 
-  function isError () {
+  function isError() {
     return display.value === 'Error'
   }
 
-  function adjustFontSize () {
+  function adjustFontSize() {
     const length = display.value.length
+    if (length <= 6) display.style.fontSize = '130px'
+    else if (length <= 9) display.style.fontSize = '100px'
+    else if (length <= 12) display.style.fontSize = '80px'
+    else if (length <= 15) display.style.fontSize = '60px'
+    else if (length <= 18) display.style.fontSize = '40px'
+    else display.style.fontSize = '25px'
+  }
 
-    if (length <= 6) {
-      display.style.fontSize = '130px'
-    } else if (length <= 9) {
-      display.style.fontSize = '100px'
-    } else if (length <= 12) {
-      display.style.fontSize = '80px'
-    } else if (length <= 15) {
-      display.style.fontSize = '60px'
-    } else if (length <= 18) {
-      display.style.fontSize = '40px'
-    } else {
-      display.style.fontSize = '25px'
+  function safeEvaluate(equationString) {
+    const cleanEquation = equationString.replaceAll('×', '*').replaceAll('÷', '/')
+    const mathSymbolsList = cleanEquation.match(/(-?\d+\.?\d*)|([+\-*/])/g)
+    if (!mathSymbolsList) return 'Error'
+
+    const additionSubtractionQueue = []
+    for (let i = 0; i < mathSymbolsList.length; i++) {
+      const currentItem = mathSymbolsList[i]
+      
+      if (currentItem === '*' || currentItem === '/') {
+        const previousNumber = parseFloat(additionSubtractionQueue.pop())
+        const nextNumber = parseFloat(mathSymbolsList[++i])
+        
+        if (currentItem === '/' && nextNumber === 0) return 'Error'
+        
+        if (currentItem === '*') {
+          additionSubtractionQueue.push(previousNumber * nextNumber)
+        } else {
+          additionSubtractionQueue.push(previousNumber / nextNumber)
+        }
+      } else {
+        additionSubtractionQueue.push(currentItem)
+      }
     }
+
+    let runningTotal = parseFloat(additionSubtractionQueue)
+    for (let i = 1; i < additionSubtractionQueue.length; i += 2) {
+      const operatorSign = additionSubtractionQueue[i]
+      const trailingNumber = parseFloat(additionSubtractionQueue[i + 1])
+      
+      if (operatorSign === '+') {
+        runningTotal += trailingNumber
+      }
+      if (operatorSign === '-') {
+        runningTotal -= trailingNumber
+      }
+    }
+    return runningTotal
   }
 
   numberButtons.forEach((button) => {
     button.addEventListener('click', () => {
       if (isError()) return
       const value = button.textContent.trim()
-
+      
       if (display.value === '' || display.value === '0' || justCalculated) {
         display.value = value
         justCalculated = false
@@ -55,7 +87,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (['+', '-', '×', '÷'].includes(lastChar)) {
         display.value = display.value.slice(0, -1) + value
-        return;
+        adjustFontSize()
+        return
       }
 
       display.value += value
@@ -67,6 +100,7 @@ document.addEventListener('DOMContentLoaded', () => {
   functionButtons.forEach((button) => {
     button.addEventListener('click', () => {
       if (isError() && !button.classList.contains('clear')) return
+      
       if (button.classList.contains('clear')) {
         display.value = ''
       }
@@ -75,38 +109,27 @@ document.addEventListener('DOMContentLoaded', () => {
         display.value = display.value.slice(0, -1) || ''
       }
 
-      if (button.classList.contains('percentage')) {
+      if (button.classList.contains('percentage') || button.classList.contains('toggle')) {
         if (display.value === '') return
-        const tokens = display.value.split(/([+\-×÷])/)
-        const lastNumStr = tokens[tokens.length - 1]
-        if (lastNumStr === '' || isNaN(lastNumStr)) return
-        
-        tokens[tokens.length - 1] = (parseFloat(lastNumStr) / 100).toString()
-        display.value = tokens.join('')
-      }
+        const equationPieces = display.value.split(/([+\-×÷])/)
+        const lastNumberInput = equationPieces[equationPieces.length - 1]
+        if (lastNumberInput === '' || isNaN(lastNumberInput)) return
 
-      if (button.classList.contains('toggle')) {
-        if (display.value === '') return
-        const tokens = display.value.split(/([+\-×÷])/)
-        const lastNumStr = tokens[tokens.length - 1]
-        if (lastNumStr === '' || isNaN(lastNumStr)) return
-
-        if (lastNumStr.startsWith('(-') && lastNumStr.endsWith(')')) {
-          tokens[tokens.length - 1] = lastNumStr.slice(2, -1)
+        if (button.classList.contains('percentage')) {
+          equationPieces[equationPieces.length - 1] = (parseFloat(lastNumberInput) / 100).toString()
         } else {
-          tokens[tokens.length - 1] = `(-${lastNumStr})`
+          equationPieces[equationPieces.length - 1] = (parseFloat(lastNumberInput) * -1).toString()
         }
-        display.value = tokens.join('')
+        display.value = equationPieces.join('')
       }
-      
       adjustFontSize()
     })
   })
 
   decimalButton.addEventListener('click', () => {
     if (isError()) return
-    const lastNumber = display.value.split(/[+\-×÷]/).pop()
-    if (!lastNumber.includes('.')) {
+    const currentNumberSegment = display.value.split(/[+\-×÷]/).pop()
+    if (!currentNumberSegment.includes('.')) {
       display.value += '.'
     }
     adjustFontSize()
@@ -115,36 +138,24 @@ document.addEventListener('DOMContentLoaded', () => {
   equalButton.addEventListener('click', () => {
     if (isError() || display.value === '') return
 
-    let expressionRaw = display.value
-    let lastChar = expressionRaw.slice(-1)
-    
-    // Drop trailing operators to prevent runtime execution evaluation errors
-    if (['+', '-', '×', '÷'].includes(lastChar)) {
-      expressionRaw = expressionRaw.slice(0, -1)
+    let finalEquation = display.value
+    if (['+', '-', '×', '÷'].includes(finalEquation.slice(-1))) {
+      finalEquation = finalEquation.slice(0, -1)
     }
 
-    const expression = expressionRaw.replaceAll('×', '*').replaceAll('÷', '/')
-
-    let result
-    try {
-      result = new Function('return ' + expression)()
-    } catch {
+    const outputResult = safeEvaluate(finalEquation)
+    if (outputResult === 'Error' || isNaN(outputResult) || !isFinite(outputResult)) {
       display.value = 'Error'
       return
     }
 
-    if (result === undefined || isNaN(result) || !isFinite(result)) {
-      display.value = 'Error'
-      return
-    }
-
-    const rounded = parseFloat(result.toFixed(10))
-    display.value = rounded.toString()
+    const fixedPrecisionNumber = parseFloat(outputResult.toFixed(10))
+    display.value = fixedPrecisionNumber.toString()
     adjustFontSize()
     justCalculated = true
 
     const item = document.createElement('li')
-    item.textContent = `${expressionRaw} = ${rounded}`
+    item.textContent = `${finalEquation} = ${fixedPrecisionNumber}`
     historyList.prepend(item)
   })
 })
