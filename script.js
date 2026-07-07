@@ -115,7 +115,7 @@ document.addEventListener('DOMContentLoaded', () => {
           (parseFloat(lastNumberInput) / 100).toString()
           display.value = equationPieces.join('')
         } else {
-          equationPieces[equationPieces.length -1] = lastNumberInput.startsWith('-')
+          equationPieces[equationPieces.length -1] = lastNumberInput.startsWith( '-' )
             ? lastNumberInput.slice(1)
             : '-' + lastNumberInput
           display.value = equationPieces.join('')
