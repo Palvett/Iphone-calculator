@@ -3,7 +3,7 @@
 document.addEventListener('DOMContentLoaded', () => {
   const display = document.querySelector('.display')
   const functionButtons = document.querySelectorAll('.function')
-  const operatorButtons = document.querySelectorAll('.operator')
+  const operatorButtons = document.querySelectorAll('.operator:not(.equal)')
   const numberButtons = document.querySelectorAll('.number')
   const decimalButton = document.querySelector('.decimal')
   const equalButton = document.querySelector('.equal')
@@ -106,7 +106,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
       if (button.classList.contains('percentage') || button.classList.contains('toggle')) {
         if (display.value === '') return
-        const equationPieces = display.value.split(/([+\-×÷])/)
+        const equationPieces = display.value.split(/([+×÷])/)
         const lastNumberInput = equationPieces[equationPieces.length - 1]
         if (lastNumberInput === '' || isNaN(lastNumberInput)) return
 
@@ -115,9 +115,10 @@ document.addEventListener('DOMContentLoaded', () => {
           (parseFloat(lastNumberInput) / 100).toString()
           display.value = equationPieces.join('')
         } else {
-          display.value = display.value.startsWith('-')
+          equationPieces[equationPieces.length -1] = lastNumberInput.startsWith('-')
             ? lastNumberInput.slice(1)
-            : '-' + display.value
+            : '-' + lastNumberInput
+          display.value = equationPieces.join('')
         }
       }
       adjustFontSize()
@@ -135,6 +136,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
   equalButton.addEventListener('click', () => {
     if (isError() || display.value === '') return
+    if (justCalculated) return
 
     const expressionRaw = display.value
 
